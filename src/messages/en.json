@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "title": "IntelliPharma — Graduation Project Invitation",
+    "description": "A smart platform integrating hybrid reinforcement learning with ERP & CRM systems."
+  },
+  "hero": {
+    "kicker": "Graduation Project Invitation",
+    "greeting": "{name},",
+    "fallbackName": "Dear Guest",
+    "lead": "You are warmly invited to attend the graduation project defense of",
+    "subtitle": "A smart platform integrating hybrid reinforcement learning with ERP & CRM systems.",
+    "scroll": "Scroll to explore",
+    "coverAlt": "An aerial view at dusk of an intelligent pharmacy delivery network — glowing amber routes tracing between clustered hexagonal nodes across a darkened landscape."
+  },
+  "event": {
+    "title": "Defense Details",
+    "dateLabel": "Date",
+    "dateValue": "April 2, 2026",
+    "timeLabel": "Time",
+    "timeValue": "To be announced",
+    "locationLabel": "Location",
+    "locationValue": "Faculty of Information Engineering, Damascus University"
+  },
+  "about": {
+    "kicker": "About the project",
+    "title": "Intelligence, quietly at work",
+    "p1": "Artificial intelligence has slipped out of the research lab and into the rhythm of ordinary life — suggesting the next song, translating a stranger's message, catching an illness before we feel it. Its quietest role may also be its most important: keeping the flow of goods that modern life depends on moving smoothly.",
+    "p2": "In logistics, every lost minute is a late delivery, every extra kilometer is fuel burned, every empty shelf is a patient without medicine. IntelliPharma applies reinforcement learning to exactly this problem — planning pharmacy visit routes that adapt in real time to urgent orders, closed pharmacies, and shifting traffic. The same engine extends to any multi-stop field operation: distribution, last-mile delivery, home services, inspections."
+  },
+  "team": {
+    "title": "The Team",
+    "supervisionLabel": "Under the supervision of",
+    "supervision": "The faculty of the Department of Software & Information Systems Engineering — Damascus University",
+    "members": [
+      "Majd Jamil Louka",
+      "Majd Samer Arous",
+      "Mohammed Riad Omar",
+      "Alaa Adnan Al-Kaissi",
+      "Mostafa Abdulnasser Sharaf"
+    ]
+  },
+  "footer": {
+    "university": "Damascus University",
+    "faculty": "Faculty of Information Engineering",
+    "date": "2026 / 4 / 2",
+    "note": "Graduation Project"
+  },
+  "a11y": {
+    "toggleTheme": "Toggle color theme",
+    "toggleLanguage": "Switch to Arabic",
+    "logo": "IntelliPharma"
+  }
+}
