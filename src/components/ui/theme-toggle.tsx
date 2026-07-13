@@ -16,8 +16,8 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={t("a11y.toggleTheme")}
       className={cn(
         "relative inline-flex size-11 items-center justify-center rounded-full",
-        "border border-border/70 bg-card/60 backdrop-blur-md",
-        "text-foreground/80 transition-colors hover:text-foreground hover:bg-card",
+        "border border-border/30 bg-card/15",
+        "text-foreground/80 transition-colors hover:text-foreground hover:bg-card/30",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}

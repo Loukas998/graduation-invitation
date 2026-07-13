@@ -16,7 +16,7 @@ export function LanguageToggle({ className }: { className?: string }) {
       aria-label={t("a11y.toggleLanguage")}
       className={cn(
         "relative inline-flex h-11 items-center gap-2 rounded-full",
-        "border border-border/70 bg-card/60 p-1 backdrop-blur-md",
+        "border border-border/30 bg-card/15 p-1",
         className,
       )}
     >
