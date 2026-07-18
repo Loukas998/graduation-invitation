@@ -24,20 +24,84 @@
   "about": {
     "kicker": "About the project",
     "title": "Intelligence, quietly at work",
-    "p1": "Artificial intelligence has slipped out of the research lab and into the rhythm of ordinary life — suggesting the next song, translating a stranger's message, catching an illness before we feel it. Its quietest role may also be its most important: keeping the flow of goods that modern life depends on moving smoothly.",
-    "p2": "In logistics, every lost minute is a late delivery, every extra kilometer is fuel burned, every empty shelf is a patient without medicine. IntelliPharma applies reinforcement learning to exactly this problem — planning pharmacy visit routes that adapt in real time to urgent orders, closed pharmacies, and shifting traffic. The same engine extends to any multi-stop field operation: distribution, last-mile delivery, home services, inspections."
+    "lead": "Follow the story — from everyday AI to routes that think for pharmacies.",
+    "beats": {
+      "everyday": {
+        "label": "The shift",
+        "title": "AI left the lab",
+        "body": "Artificial intelligence slipped into ordinary life — suggesting the next song, translating a stranger's message, catching an illness before we feel it."
+      },
+      "flow": {
+        "label": "The quiet role",
+        "title": "Keeping life moving",
+        "body": "Its quietest role may also be its most important: keeping the flow of goods that modern life depends on moving smoothly."
+      },
+      "stakes": {
+        "label": "The stakes",
+        "title": "Every minute matters",
+        "body": "In logistics, every lost minute is a late delivery, every extra kilometer is fuel burned, every empty shelf is a patient without medicine."
+      },
+      "engine": {
+        "label": "The engine",
+        "title": "Routes that think",
+        "body": "IntelliPharma applies reinforcement learning to plan pharmacy visit routes that adapt in real time to urgent orders, closed pharmacies, and shifting traffic — and the same engine extends to distribution, last-mile delivery, home services, and inspections."
+      }
+    }
   },
   "team": {
+    "kicker": "Starting lineup",
     "title": "The Team",
+    "lead": "Four positions on the court. Watch the ball move — that is how the pieces of IntelliPharma talk to each other.",
+    "hint": "Tap a position to meet the players and see their passes.",
+    "courtCaption": "AI calls the play → Backend runs the floor → Dashboard & Mobile finish with a smart guide on each side.",
+    "emptyHint": "Tap a jersey on the court to open that position.",
+    "playersLabel": "Players on this position",
     "supervisionLabel": "Under the supervision of",
     "supervision": "The faculty of the Department of Software & Information Systems Engineering — Damascus University",
-    "members": [
-      "Majd Jamil Louka",
-      "Majd Samer Arous",
-      "Mohammed Riad Omar",
-      "Alaa Adnan Al-Kaissi",
-      "Mostafa Abdulnasser Sharaf"
-    ]
+    "passes": {
+      "aiBackend": "AI passes smarter decisions — routes and chat guidance — to the Backend engine.",
+      "backendFrontend": "Backend feeds the admin Dashboard with live data and its smart guide chatbot.",
+      "backendFlutter": "Backend feeds the Mobile app — and its chatbot that coaches new field staff."
+    },
+    "roles": {
+      "ai": {
+        "tag": "AI",
+        "position": "Playmaker",
+        "title": "The thinking guide",
+        "blurb": "This position teaches the system to think — smarter visit routes when the day shifts, and the brains behind the smart guide chatbots on both Dashboard and Mobile. The play starts here.",
+        "members": {
+          "alaaKaissi": "Alaa Adnan Al-Kaissi"
+        }
+      },
+      "backend": {
+        "tag": "Backend",
+        "position": "Center / Hub",
+        "title": "The engine room",
+        "blurb": "The hub of the floor. Stores data, answers requests, and keeps Dashboard, Mobile, and AI talking. Like a restaurant kitchen — you rarely see it, but nothing works without it.",
+        "members": {
+          "majdLouka": "Majd Jamil Louka",
+          "majdArous": "Majd Samer Arous"
+        }
+      },
+      "frontend": {
+        "tag": "Dashboard",
+        "position": "Wing",
+        "title": "The admin command center",
+        "blurb": "The web Dashboard for admins — live operations at a glance, plus a smart guide chatbot that helps them decide and analyze the system in plain language — without leaning only on drawn charts.",
+        "members": {
+          "mohammedOmar": "Mohammed Riad Omar"
+        }
+      },
+      "flutter": {
+        "tag": "Mobile",
+        "position": "Wing",
+        "title": "The app in the field",
+        "blurb": "The Mobile app for the road — with a smart guide chatbot that helps new employees (new distributors and sales representatives) learn the ropes and work with confidence.",
+        "members": {
+          "mostafaSharaf": "Mostafa Abdulnasser Sharaf"
+        }
+      }
+    }
   },
   "footer": {
     "university": "Damascus University",
