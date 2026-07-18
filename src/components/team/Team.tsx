@@ -56,16 +56,16 @@ const ROLES: {
     id: "frontend",
     members: ["mohammedOmar"],
     Illustration: RoleFrontend,
-    x: 20,
-    y: 76,
+    x: 22,
+    y: 70,
     jersey: "07",
   },
   {
     id: "flutter",
     members: ["mostafaSharaf"],
     Illustration: RoleFlutter,
-    x: 80,
-    y: 76,
+    x: 78,
+    y: 70,
     jersey: "11",
   },
 ];
@@ -380,8 +380,8 @@ export function Team() {
                 <>
                   <span
                     className={cn(
-                      "max-w-[7.5rem] rounded-full px-2.5 py-1 text-center text-[11px] font-semibold uppercase tracking-[0.12em] sm:max-w-[9rem] sm:text-xs",
-                      "bg-background/85 text-foreground ring-1 ring-border/60 backdrop-blur-sm",
+                      "max-w-[6.5rem] rounded-full px-2 py-1 text-center text-[10px] font-semibold uppercase tracking-[0.12em] sm:max-w-[9rem] sm:px-2.5 sm:text-xs",
+                      "bg-background/90 text-foreground ring-1 ring-border/60 backdrop-blur-sm",
                       open && "text-teal-ink ring-teal/40",
                       dimmed && "opacity-50",
                     )}
@@ -389,9 +389,10 @@ export function Team() {
                     {t(`team.roles.${role.id}.tag`)}
                   </span>
 
+                  {/* Titles collide with the caption on narrow screens — show from sm up. */}
                   <span
                     className={cn(
-                      "max-w-[9rem] text-center text-xs font-medium leading-snug text-muted-foreground sm:max-w-[11rem] sm:text-sm",
+                      "hidden max-w-[9rem] text-center text-xs font-medium leading-snug text-muted-foreground sm:block sm:max-w-[11rem] sm:text-sm",
                       open && "text-foreground",
                       dimmed && "opacity-50",
                     )}
@@ -404,7 +405,7 @@ export function Team() {
               const jersey = (
                 <motion.span
                   className={cn(
-                    "relative flex size-[4.5rem] items-center justify-center rounded-full border-2 sm:size-[5.25rem]",
+                    "relative flex size-16 items-center justify-center rounded-full border-2 sm:size-[5.25rem]",
                     "bg-card/90 shadow-[0_10px_28px_-12px_color-mix(in_oklab,var(--brand)_45%,transparent)] backdrop-blur-md",
                     "transition-[border-color,box-shadow,opacity] duration-300",
                     open
@@ -481,10 +482,10 @@ export function Team() {
                     {jersey}
                     <span
                       className={cn(
-                        "absolute start-1/2 flex w-max -translate-x-1/2 flex-col items-center gap-1.5",
+                        "absolute start-1/2 z-10 flex w-max max-w-[7rem] -translate-x-1/2 flex-col items-center gap-1 sm:max-w-none sm:gap-1.5",
                         labelsAbove
-                          ? "bottom-full mb-2"
-                          : "top-full mt-2",
+                          ? "bottom-full mb-1.5 sm:mb-2"
+                          : "top-full mt-1.5 sm:mt-2",
                       )}
                     >
                       {labels}
@@ -495,8 +496,8 @@ export function Team() {
             })}
           </div>
 
-          <div className="relative border-t border-border/50 bg-background/40 px-4 py-3 sm:px-6">
-            <p className="text-center text-xs text-muted-foreground sm:text-sm">
+          <div className="relative z-20 border-t border-border/50 bg-background/90 px-4 py-3 backdrop-blur-sm sm:px-6">
+            <p className="text-center text-xs leading-relaxed text-muted-foreground sm:text-sm">
               {t("team.courtCaption")}
             </p>
           </div>
