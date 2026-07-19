@@ -7,7 +7,14 @@ const OPTIONS: { value: Locale; label: string }[] = [
   { value: "en", label: "EN" },
 ];
 
-export function LanguageToggle({ className }: { className?: string }) {
+export function LanguageToggle({
+  className,
+  onDark = false,
+}: {
+  className?: string;
+  /** Liquid-glass over dark footage vs. theme glass over page surfaces. */
+  onDark?: boolean;
+}) {
   const { locale, setLocale, t } = useI18n();
 
   return (
@@ -15,8 +22,9 @@ export function LanguageToggle({ className }: { className?: string }) {
       role="group"
       aria-label={t("a11y.toggleLanguage")}
       className={cn(
-        "relative inline-flex h-11 items-center gap-2 rounded-full",
-        "border border-border/30 bg-card/15 p-1",
+        "relative inline-flex h-11 items-center gap-1 rounded-full border p-1",
+        "transition-[background-color,border-color,box-shadow] duration-500",
+        onDark ? "glass-dark" : "glass-light",
         className,
       )}
     >
@@ -30,11 +38,13 @@ export function LanguageToggle({ className }: { className?: string }) {
             aria-pressed={active}
             className={cn(
               "relative inline-flex h-9 min-w-11 items-center justify-center rounded-full px-3.5",
-              "text-sm font-medium transition-colors",
+              "text-sm font-semibold whitespace-nowrap transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               active
                 ? "text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground",
+                : onDark
+                  ? "text-white/75 hover:text-white"
+                  : "text-foreground/70 hover:text-foreground",
             )}
           >
             {active && (
@@ -44,7 +54,19 @@ export function LanguageToggle({ className }: { className?: string }) {
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
             )}
-            <span className="relative z-10">{option.label}</span>
+            <span
+              className="relative z-10 leading-normal"
+              // Always shape عربي with the Arabic font, even while the page is LTR.
+              lang={option.value === "ar" ? "ar" : undefined}
+              dir={option.value === "ar" ? "rtl" : undefined}
+              style={
+                option.value === "ar"
+                  ? { fontFamily: "var(--font-arabic)" }
+                  : undefined
+              }
+            >
+              {option.label}
+            </span>
           </button>
         );
       })}

@@ -1,10 +1,11 @@
-import { useId, useState, type ComponentType } from "react";
+import { useId, useRef, useState, type ComponentType } from "react";
 import {
   AnimatePresence,
   motion,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
+import { MousePointerClick } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { fadeUp, inViewport, staggerContainer } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -177,10 +178,24 @@ export function Team() {
   const { t, dir } = useI18n();
   const reduce = useReducedMotion();
   const [activeRole, setActiveRole] = useState<RoleId | null>(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const detailRef = useRef<HTMLDivElement>(null);
   const uid = useId().replace(/:/g, "");
 
   const toggle = (id: RoleId) => {
-    setActiveRole((prev) => (prev === id ? null : id));
+    setHasInteracted(true);
+    const next = activeRole === id ? null : id;
+    setActiveRole(next);
+    // Bring the detail card into view once the swap animation has started —
+    // otherwise the user taps a jersey and nothing visibly happens.
+    if (next) {
+      window.setTimeout(() => {
+        detailRef.current?.scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+          block: "center",
+        });
+      }, 330);
+    }
   };
 
   const active = activeRole ? roleAt(activeRole) : null;
@@ -244,15 +259,23 @@ export function Team() {
 
         <motion.p
           variants={fadeUp}
-          className="mt-3 text-sm font-medium text-warm"
+          className="mt-3 flex items-center gap-2 text-sm font-medium text-warm"
         >
+          <motion.span
+            aria-hidden="true"
+            className="inline-flex"
+            animate={reduce ? undefined : { scale: [1, 1.25, 1], rotate: [0, -8, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <MousePointerClick className="size-4.5" strokeWidth={2} />
+          </motion.span>
           {t("team.hint")}
         </motion.p>
 
         {/* Court lineup */}
         <motion.div
           variants={fadeUp}
-          className="relative mt-12 overflow-hidden rounded-[2rem] border border-border/70 bg-card/40 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--foreground)_6%,transparent)] backdrop-blur-sm"
+          className="relative mt-12 overflow-hidden rounded-[2rem] border border-border/70 bg-card/70 shadow-[0_18px_50px_-32px_color-mix(in_oklab,var(--brand)_55%,transparent)] backdrop-blur-sm dark:bg-card/40 dark:shadow-[inset_0_1px_0_color-mix(in_oklab,var(--foreground)_6%,transparent)]"
         >
           <div className="relative aspect-[3/4] w-full min-h-[32rem] overflow-hidden sm:aspect-[4/5] sm:min-h-[36rem] lg:aspect-auto lg:min-h-0 lg:h-[min(82vh,48rem)]">
             {/* Court floor markings */}
@@ -312,15 +335,18 @@ export function Team() {
                 const line = insetLine(ax, a.y, bx, b.y, inset);
                 return (
                   <g key={`lane-${from}-${to}`}>
+                    {/* non-scaling-stroke: the stretched viewBox would otherwise
+                        blow these up into ~20px bars. Widths are in screen px. */}
                     <motion.line
                       x1={line.x1}
                       y1={line.y1}
                       x2={line.x2}
                       y2={line.y2}
                       stroke="var(--teal)"
-                      strokeWidth={involved ? 2.4 : 1}
+                      strokeWidth={involved ? 7 : 3}
+                      vectorEffect="non-scaling-stroke"
                       strokeLinecap="round"
-                      strokeOpacity={involved ? 0.28 : 0.08}
+                      strokeOpacity={involved ? 0.16 : 0.05}
                       initial={false}
                       animate={{ opacity: 1 }}
                     />
@@ -330,7 +356,8 @@ export function Team() {
                       x2={line.x2}
                       y2={line.y2}
                       stroke={`url(#${uid}-lane)`}
-                      strokeWidth={involved ? 1.35 : 0.5}
+                      strokeWidth={involved ? 2.25 : 1}
+                      vectorEffect="non-scaling-stroke"
                       strokeLinecap="round"
                       initial={false}
                       animate={{ opacity: involved ? 1 : 0.25 }}
@@ -430,6 +457,21 @@ export function Team() {
                     ease: "easeInOut",
                   }}
                 >
+                  {/* Radar ping — "I'm tappable" — until the first interaction */}
+                  {!hasInteracted && !reduce && (
+                    <motion.span
+                      aria-hidden="true"
+                      className="absolute inset-0 rounded-full border-2 border-teal/70"
+                      animate={{ scale: [1, 1.55], opacity: [0.75, 0] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: i * 0.4,
+                        ease: "easeOut",
+                        repeatDelay: 0.4,
+                      }}
+                    />
+                  )}
                   <span
                     aria-hidden="true"
                     className="absolute -start-1 -top-1 flex size-7 items-center justify-center rounded-full text-[10px] font-bold tracking-tight ring-2 ring-card sm:size-8 sm:text-xs"
@@ -478,19 +520,36 @@ export function Team() {
                     "focus-visible:ring-2 focus-visible:ring-teal/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                   )}
                 >
-                  <span className="relative flex items-center justify-center">
+                  <motion.span
+                    className="relative flex items-center justify-center"
+                    animate={reduce || open ? undefined : { y: [0, -5, 0] }}
+                    transition={{
+                      duration: 3.2 + i * 0.3,
+                      delay: i * 0.45,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
                     {jersey}
                     <span
                       className={cn(
-                        "absolute start-1/2 z-10 flex w-max max-w-[7rem] -translate-x-1/2 flex-col items-center gap-1 sm:max-w-none sm:gap-1.5",
-                        labelsAbove
-                          ? "bottom-full mb-1.5 sm:mb-2"
-                          : "top-full mt-1.5 sm:mt-2",
+                        // left-1/2 (physical), NOT start-1/2: in RTL `right: 50%`
+                        // plus the physical translate compounds and shoves the
+                        // label a full width off its jersey.
+                        "absolute left-1/2 z-10 flex w-max max-w-[7rem] -translate-x-1/2 flex-col items-center gap-1 sm:max-w-none sm:gap-1.5",
+                        // AI jersey hugs the court's top edge on mobile — labels
+                        // above it would clip behind the fixed header, so flip
+                        // them below until sm.
+                        role.id === "ai"
+                          ? "top-full mt-1.5 sm:top-auto sm:mt-0 sm:bottom-full sm:mb-2"
+                          : labelsAbove
+                            ? "bottom-full mb-1.5 sm:mb-2"
+                            : "top-full mt-1.5 sm:mt-2",
                       )}
                     >
                       {labels}
                     </span>
-                  </span>
+                  </motion.span>
                 </motion.button>
               );
             })}
@@ -503,8 +562,37 @@ export function Team() {
           </div>
         </motion.div>
 
+        {/* Quick role switcher — a second, obvious way into the details */}
+        <motion.div
+          variants={fadeUp}
+          className="mt-6 flex flex-wrap justify-center gap-2"
+        >
+          {ROLES.map((role) => {
+            const selected = activeRole === role.id;
+            return (
+              <button
+                key={`chip-${role.id}`}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => toggle(role.id)}
+                className={cn(
+                  "inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] outline-none",
+                  "transition-[color,border-color,background-color,box-shadow] duration-300",
+                  "focus-visible:ring-2 focus-visible:ring-teal/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  selected
+                    ? "border-teal bg-accent text-accent-foreground shadow-[0_0_0_4px_color-mix(in_oklab,var(--teal)_15%,transparent)]"
+                    : "border-border/70 bg-card/50 text-muted-foreground hover:border-teal/45 hover:text-foreground",
+                )}
+              >
+                <span className="font-mono text-[10px]">{role.jersey}</span>
+                {t(`team.roles.${role.id}.tag`)}
+              </button>
+            );
+          })}
+        </motion.div>
+
         {/* Role detail — role first, then players */}
-        <div className="mt-6 min-h-[12rem]">
+        <div ref={detailRef} className="mt-5 min-h-[12rem] scroll-mt-20">
           <AnimatePresence mode="wait">
             {active && ActiveIllustration ? (
               <motion.article
@@ -515,14 +603,14 @@ export function Team() {
                 animate="visible"
                 exit="exit"
                 className={cn(
-                  "overflow-hidden rounded-3xl border border-teal/40 bg-card/70",
+                  "overflow-hidden rounded-3xl border border-teal/40 bg-card dark:bg-card/70",
                   "shadow-[0_16px_48px_-24px_color-mix(in_oklab,var(--teal)_50%,transparent)]",
                 )}
               >
-                <div className="grid gap-0 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+                <div className="grid gap-0 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
                   <div
                     className={cn(
-                      "relative aspect-[16/11] overflow-hidden lg:aspect-auto lg:min-h-[16rem]",
+                      "relative aspect-[16/9] overflow-hidden lg:aspect-auto lg:min-h-0",
                       "bg-gradient-to-br from-accent/50 via-muted/25 to-transparent",
                     )}
                   >
@@ -534,12 +622,12 @@ export function Team() {
                       }}
                     />
                     <ActiveIllustration
-                      className="relative h-full p-4 sm:p-6"
+                      className="relative h-full p-3 sm:p-5"
                       active
                     />
                   </div>
 
-                  <div className="flex flex-col p-5 sm:p-7">
+                  <div className="flex flex-col p-4 sm:p-6">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-accent-foreground">
                         {t(`team.roles.${active.id}.position`)}
@@ -549,19 +637,19 @@ export function Team() {
                       </span>
                     </div>
 
-                    <h3 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                    <h3 className="mt-2.5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
                       {t(`team.roles.${active.id}.title`)}
                     </h3>
 
-                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       {t(`team.roles.${active.id}.blurb`)}
                     </p>
 
-                    <p className="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-teal-ink">
+                    <p className="mt-3.5 text-xs font-semibold uppercase tracking-[0.18em] text-teal-ink">
                       {t("team.playersLabel")}
                     </p>
 
-                    <ul className="mt-3 flex flex-col gap-2">
+                    <ul className="mt-2.5 flex flex-col gap-2">
                       {active.members.map((memberId, mi) => (
                         <motion.li
                           key={memberId}
@@ -573,10 +661,10 @@ export function Team() {
                             stiffness: 220,
                             damping: 22,
                           }}
-                          className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-3.5 py-2.5"
+                          className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/60 px-3 py-2"
                         >
                           <span
-                            className="flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                            className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold"
                             style={{
                               background: "var(--brand)",
                               color: "var(--primary-foreground)",
@@ -594,7 +682,7 @@ export function Team() {
                       ))}
                     </ul>
 
-                    <ul className="mt-5 flex flex-col gap-1.5 border-t border-border/50 pt-4">
+                    <ul className="mt-4 flex flex-col gap-1.5 border-t border-border/50 pt-3.5">
                       {PASSES.filter(
                         (p) => p.from === active.id || p.to === active.id,
                       ).map((p) => (
@@ -613,7 +701,7 @@ export function Team() {
 
                     <motion.div
                       aria-hidden="true"
-                      className="mt-5 h-0.5 rounded-full bg-gradient-to-r from-teal to-warm"
+                      className="mt-4 h-0.5 rounded-full bg-gradient-to-r from-teal to-warm"
                       initial={{ scaleX: 0 }}
                       animate={{ scaleX: 1 }}
                       transition={{

@@ -48,6 +48,56 @@
       }
     }
   },
+  "journey": {
+    "kicker": "One order's journey",
+    "title": "From a shelf running empty to medicine on time",
+    "lead": "The best way to understand IntelliPharma is to follow a single urgent order through the whole system — from the AI brain to a real person's hands.",
+    "closing": "The whole journey takes minutes. Building it took a year.",
+    "closingSub": "Come see how it works — live, at the defense.",
+    "cta": "See the defense details",
+    "steps": {
+      "order": {
+        "label": "The trigger",
+        "time": "9:12 AM",
+        "title": "A pharmacy runs low",
+        "body": "A pharmacy on the edge of the city places an urgent order for insulin. Somewhere, a shelf is about to go empty — and the clock starts."
+      },
+      "brain": {
+        "label": "The brain",
+        "time": "+3 seconds",
+        "title": "The AI re-thinks the whole day",
+        "body": "The reinforcement-learning engine re-plans the entire route in seconds — weighing traffic, urgency, and every other stop, like a chess player redrawing the plan mid-game."
+      },
+      "backend": {
+        "label": "The engine",
+        "time": "+5 seconds",
+        "title": "The backend spreads the word",
+        "body": "The new plan flows through the backend: the database updates, the admin dashboard redraws itself, and the driver's phone quietly buzzes."
+      },
+      "field": {
+        "label": "The field",
+        "time": "On the road",
+        "title": "The road adapts",
+        "body": "The distributor simply follows the updated route on the mobile app — no phone calls, no confusion, just a new best path drawn on the screen."
+      },
+      "delivered": {
+        "label": "The finish",
+        "time": "Before noon",
+        "title": "Medicine, on time",
+        "body": "The order arrives before the shelf goes empty. To the pharmacist it looks effortless — and that quiet effortlessness is the project."
+      }
+    }
+  },
+  "saveTheDate": {
+    "kicker": "Save the date",
+    "title": "Be there for the story's final chapter",
+    "lead": "The defense is where the whole journey comes together — and your seat is reserved.",
+    "day": "2",
+    "month": "April",
+    "year": "2026",
+    "admitLabel": "Admit one",
+    "ticketNote": "IntelliPharma — Graduation Project Defense"
+  },
   "team": {
     "kicker": "Starting lineup",
     "title": "The Team",

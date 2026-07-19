@@ -31,7 +31,120 @@ function useSvgPivot(
   return ref;
 }
 
-/** Everyday AI — a glowing core linked to music, chat, and health. */
+/** A four-point "AI magic" sparkle — the shape everyone knows from AI assistants. */
+export function AISparkle({
+  x,
+  y,
+  size = 6,
+  fill = "var(--warm)",
+  delay = 0,
+  active,
+}: {
+  x: number;
+  y: number;
+  size?: number;
+  fill?: string;
+  delay?: number;
+  active?: boolean;
+}) {
+  const s = size;
+  return (
+    <motion.path
+      d={`M${x} ${y - s} C${x + s * 0.18} ${y - s * 0.18} ${x + s * 0.18} ${y - s * 0.18} ${x + s} ${y} C${x + s * 0.18} ${y + s * 0.18} ${x + s * 0.18} ${y + s * 0.18} ${x} ${y + s} C${x - s * 0.18} ${y + s * 0.18} ${x - s * 0.18} ${y + s * 0.18} ${x - s} ${y} C${x - s * 0.18} ${y - s * 0.18} ${x - s * 0.18} ${y - s * 0.18} ${x} ${y - s} Z`}
+      fill={fill}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={
+        active
+          ? { scale: [0.6, 1.15, 0.6], opacity: [0.35, 1, 0.35], rotate: [0, 18, 0] }
+          : { scale: 1, opacity: 0.9 }
+      }
+      transition={
+        active
+          ? { duration: 1.8, delay, repeat: Infinity, ease: "easeInOut" }
+          : { ...spring, delay }
+      }
+      style={{ transformOrigin: `${x}px ${y}px` }}
+    />
+  );
+}
+
+/** The IntelliPharma AI mascot — a friendly robot head anyone reads as "AI". */
+export function RobotHead({
+  cx,
+  cy,
+  scale = 1,
+  active,
+}: {
+  cx: number;
+  cy: number;
+  scale?: number;
+  active?: boolean;
+}) {
+  return (
+    <motion.g
+      style={{ transformOrigin: `${cx}px ${cy}px` }}
+      animate={active ? { y: [0, -3, 0] } : {}}
+      transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <g transform={`translate(${cx} ${cy}) scale(${scale}) translate(${-cx} ${-cy})`}>
+        {/* Antenna with glowing tip */}
+        <line
+          x1={cx}
+          y1={cy - 20}
+          x2={cx}
+          y2={cy - 29}
+          stroke="var(--teal)"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+        <motion.circle
+          cx={cx}
+          cy={cy - 32}
+          r="3.5"
+          fill="var(--warm)"
+          animate={active ? { opacity: [0.5, 1, 0.5], scale: [1, 1.3, 1] } : {}}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          style={{ transformOrigin: `${cx}px ${cy - 32}px` }}
+        />
+        {/* Ears */}
+        <rect x={cx - 29} y={cy - 7} width="5" height="14" rx="2.5" fill="var(--teal)" fillOpacity="0.55" />
+        <rect x={cx + 24} y={cy - 7} width="5" height="14" rx="2.5" fill="var(--teal)" fillOpacity="0.55" />
+        {/* Head */}
+        <rect
+          x={cx - 24}
+          y={cy - 20}
+          width="48"
+          height="40"
+          rx="12"
+          fill="var(--card)"
+          stroke="var(--teal)"
+          strokeWidth="2"
+        />
+        {/* Face screen */}
+        <rect x={cx - 17} y={cy - 13} width="34" height="26" rx="8" fill="var(--accent)" />
+        {/* Eyes — blink when thinking */}
+        <motion.g
+          animate={active ? { scaleY: [1, 1, 0.1, 1, 1] } : {}}
+          transition={{ duration: 3.4, times: [0, 0.42, 0.5, 0.58, 1], repeat: Infinity }}
+          style={{ transformOrigin: `${cx}px ${cy - 3}px` }}
+        >
+          <circle cx={cx - 8} cy={cy - 3} r="3.5" fill="var(--teal)" />
+          <circle cx={cx + 8} cy={cy - 3} r="3.5" fill="var(--teal)" />
+        </motion.g>
+        {/* Smile */}
+        <path
+          d={`M${cx - 7} ${cy + 5} q7 5 14 0`}
+          stroke="var(--teal-ink)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </g>
+    </motion.g>
+  );
+}
+
+/** Everyday AI — the friendly assistant already inside daily apps. */
 export function EverydayAI({ className, active }: IllustProps) {
   const reduce = useReducedMotion();
   const pulse = !reduce && active;
@@ -45,8 +158,8 @@ export function EverydayAI({ className, active }: IllustProps) {
     >
       <defs>
         <radialGradient id="about-ai-core" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.9" />
-          <stop offset="70%" stopColor="var(--teal)" stopOpacity="0.25" />
+          <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.55" />
+          <stop offset="70%" stopColor="var(--teal)" stopOpacity="0.15" />
           <stop offset="100%" stopColor="var(--teal)" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="about-ai-line" x1="0" y1="0" x2="1" y2="1">
@@ -60,19 +173,19 @@ export function EverydayAI({ className, active }: IllustProps) {
       <motion.circle
         cx="140"
         cy="110"
-        r="58"
+        r="62"
         fill="url(#about-ai-core)"
         animate={pulse ? { scale: [1, 1.08, 1], opacity: [0.7, 1, 0.7] } : {}}
         transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "140px 110px" }}
       />
 
-      {/* Connection lines */}
+      {/* Connection lines to everyday apps */}
       {[
-        "M140 110 L70 48",
-        "M140 110 L210 48",
-        "M140 110 L70 172",
-        "M140 110 L210 172",
+        "M116 96 L86 62",
+        "M164 96 L194 62",
+        "M116 124 L86 158",
+        "M164 124 L194 158",
       ].map((d, i) => (
         <motion.path
           key={d}
@@ -86,70 +199,77 @@ export function EverydayAI({ className, active }: IllustProps) {
         />
       ))}
 
-      {/* Core node */}
-      <motion.circle
-        cx="140"
-        cy="110"
-        r="18"
-        fill="var(--teal)"
-        fillOpacity="0.2"
-        stroke="var(--teal)"
-        strokeWidth="2"
-        animate={pulse ? { scale: [1, 1.12, 1] } : {}}
-        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformOrigin: "140px 110px" }}
-      />
-      <circle cx="140" cy="110" r="6" fill="var(--teal)" />
-
-      {/* Orbiting spark */}
+      {/* The AI — a friendly robot assistant, sparkles and all */}
       <motion.g
-        animate={pulse ? { rotate: 360 } : {}}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        initial={{ opacity: 0, scale: 0.7 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ ...spring, delay: 0.1 }}
         style={{ transformOrigin: "140px 110px" }}
       >
-        <circle cx="140" cy="62" r="3.5" fill="var(--warm)" />
+        <RobotHead cx={140} cy={110} active={pulse} />
       </motion.g>
+      <AISparkle x={178} y={78} size={7} delay={0.3} active={pulse} />
+      <AISparkle x={104} y={84} size={4.5} fill="var(--teal)" delay={0.8} active={pulse} />
+      <AISparkle x={172} y={140} size={5} fill="var(--teal)" delay={1.3} active={pulse} />
 
-      {/* Satellite nodes — music / chat / health / signal */}
+      {/* Everyday apps the AI already lives in */}
       <Satellite cx={70} cy={48} delay={0.1} active={pulse}>
+        {/* Music note */}
         <path
-          d="M66 52v-8l8-2v10"
+          d="M66 54v-9.5l9-2.5V51"
           stroke="currentColor"
-          strokeWidth="1.6"
+          strokeWidth="1.7"
           strokeLinecap="round"
           strokeLinejoin="round"
           className="text-foreground"
+          fill="none"
         />
-        <circle cx="66" cy="52" r="2.2" fill="var(--warm)" />
+        <circle cx="63.5" cy="54" r="2.6" fill="var(--warm)" />
+        <circle cx="72.5" cy="51" r="2.6" fill="var(--warm)" />
       </Satellite>
       <Satellite cx={210} cy={48} delay={0.2} active={pulse}>
+        {/* Chat bubble with typing dots */}
         <path
-          d="M204 44h12v8l-3.5-2.5H204z"
+          d="M201 41h18a3 3 0 013 3v7a3 3 0 01-3 3h-8l-5 4v-4h-5a3 3 0 01-3-3v-7a3 3 0 013-3z"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinejoin="round"
           className="text-foreground"
           fill="none"
+          transform="translate(-1 0)"
         />
+        {[203, 209, 215].map((x, i) => (
+          <motion.circle
+            key={x}
+            cx={x}
+            cy={47.5}
+            r="1.6"
+            fill="var(--teal)"
+            animate={pulse ? { opacity: [0.25, 1, 0.25] } : {}}
+            transition={{ duration: 1.1, delay: i * 0.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        ))}
       </Satellite>
       <Satellite cx={70} cy={172} delay={0.3} active={pulse}>
+        {/* Health cross */}
         <path
           d="M70 166v12M64 172h12"
           stroke="var(--teal)"
-          strokeWidth="2"
+          strokeWidth="2.2"
           strokeLinecap="round"
         />
       </Satellite>
       <Satellite cx={210} cy={172} delay={0.4} active={pulse}>
+        {/* Voice assistant mic */}
+        <rect x="206.5" y="163" width="7" height="12" rx="3.5" stroke="currentColor" strokeWidth="1.5" className="text-foreground" fill="none" />
         <path
-          d="M204 176c0-4 3-7 6-7s6 3 6 7"
+          d="M203 172c0 4.5 3 7 7 7s7-2.5 7-7M210 179v3"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="round"
           className="text-foreground"
           fill="none"
         />
-        <circle cx="210" cy="168" r="2" fill="var(--teal)" />
       </Satellite>
     </svg>
   );
@@ -353,7 +473,7 @@ export function GoodsFlow({ className, active }: IllustProps) {
 
 /** Logistics stakes — clock, speedometer, capsule.
  *  Hands pivot from the hub via the SVG transform attribute. */
-export function LogisticsStakes({ className, active: _active }: IllustProps) {
+export function LogisticsStakes({ className }: IllustProps) {
   const reduce = useReducedMotion();
   const run = reduce !== true;
 

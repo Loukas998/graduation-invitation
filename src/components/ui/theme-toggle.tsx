@@ -4,7 +4,14 @@ import { useTheme } from "@/lib/theme";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-export function ThemeToggle({ className }: { className?: string }) {
+export function ThemeToggle({
+  className,
+  onDark = false,
+}: {
+  className?: string;
+  /** Liquid-glass over dark footage vs. theme glass over page surfaces. */
+  onDark?: boolean;
+}) {
   const { resolvedTheme, toggleTheme } = useTheme();
   const { t } = useI18n();
   const isDark = resolvedTheme === "dark";
@@ -15,9 +22,12 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={toggleTheme}
       aria-label={t("a11y.toggleTheme")}
       className={cn(
-        "relative inline-flex size-11 items-center justify-center rounded-full",
-        "border border-border/30 bg-card/15",
-        "text-foreground/80 transition-colors hover:text-foreground hover:bg-card/30",
+        "relative inline-flex size-11 items-center justify-center rounded-full border",
+        "transition-[background-color,border-color,box-shadow,color] duration-500",
+        onDark ? "glass-dark" : "glass-light",
+        onDark
+          ? "text-white/85 hover:text-white"
+          : "text-foreground/80 hover:text-foreground",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}

@@ -58,7 +58,7 @@ export function About() {
         className="pointer-events-none absolute inset-0 -z-10"
       >
         <div
-          className="absolute -top-24 start-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full opacity-40 blur-3xl dark:opacity-25"
+          className="absolute -top-24 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full opacity-40 blur-3xl dark:opacity-25"
           style={{
             background:
               "radial-gradient(circle, color-mix(in oklab, var(--teal) 35%, transparent), transparent 70%)",
@@ -236,8 +236,8 @@ function StoryBeat({
             variants={illustrReveal}
             className={cn(
               "relative aspect-[14/11] overflow-hidden rounded-2xl",
-              "bg-gradient-to-br from-accent/40 via-muted/30 to-transparent",
-              "ring-1 ring-border/60",
+              "bg-gradient-to-br from-accent/60 via-card to-card dark:from-accent/40 dark:via-muted/30 dark:to-transparent",
+              "ring-1 ring-border shadow-[0_12px_36px_-26px_color-mix(in_oklab,var(--brand)_55%,transparent)] dark:ring-border/60 dark:shadow-none",
             )}
           >
             <div

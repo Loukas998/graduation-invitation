@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { AISparkle, RobotHead } from "@/components/about/AboutIllustrations";
 import { cn } from "@/lib/utils";
 
 type IllustProps = {
@@ -475,20 +476,18 @@ export function RoleFlutter({ className, active }: IllustProps) {
   );
 }
 
-/** AI — the thinking guide that chooses smarter routes. */
+/** AI — a thinking brain weighing three candidate routes and locking in the best. */
 export function RoleAI({ className, active }: IllustProps) {
   const reduce = useReducedMotion();
   const live = !reduce && active;
   const uid = useId().replace(/:/g, "");
 
-  const nodes = [
-    { x: 70, y: 60 },
-    { x: 140, y: 44 },
-    { x: 210, y: 60 },
-    { x: 90, y: 130 },
-    { x: 190, y: 130 },
-    { x: 140, y: 156 },
-  ];
+  // Three candidate routes from warehouse (left) to pharmacy (right).
+  const routes = {
+    top: "M52 96 C 84 44, 176 36, 226 92",
+    best: "M52 96 C 104 116, 168 76, 226 92",
+    bottom: "M52 96 C 92 168, 188 160, 226 92",
+  };
 
   return (
     <svg
@@ -498,114 +497,343 @@ export function RoleAI({ className, active }: IllustProps) {
       aria-hidden="true"
     >
       <defs>
-        <radialGradient id={`${uid}-core`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.85" />
-          <stop offset="70%" stopColor="var(--teal)" stopOpacity="0.2" />
+        <linearGradient id={`${uid}-best`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="var(--warm)" />
+          <stop offset="55%" stopColor="var(--teal)" />
+          <stop offset="100%" stopColor="var(--teal)" />
+        </linearGradient>
+        <radialGradient id={`${uid}-halo`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.4" />
           <stop offset="100%" stopColor="var(--teal)" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id={`${uid}-link`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.2" />
-          <stop offset="50%" stopColor="var(--teal)" stopOpacity="0.75" />
-          <stop offset="100%" stopColor="var(--warm)" stopOpacity="0.55" />
-        </linearGradient>
       </defs>
 
-      <motion.circle
-        cx="140"
-        cy="100"
-        r="52"
-        fill={`url(#${uid}-core)`}
-        animate={live ? { scale: [1, 1.1, 1], opacity: [0.65, 1, 0.65] } : {}}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformOrigin: "140px 100px" }}
-      />
+      {/* Map dot grid */}
+      {[48, 84, 120, 156].map((y) =>
+        [64, 104, 144, 184, 224].map((x) => (
+          <circle key={`${x}-${y}`} cx={x} cy={y} r="1.2" fill="var(--foreground)" fillOpacity="0.1" />
+        )),
+      )}
 
-      {/* Neural links */}
-      {[
-        "M140 100 L70 60",
-        "M140 100 L140 44",
-        "M140 100 L210 60",
-        "M140 100 L90 130",
-        "M140 100 L190 130",
-        "M140 100 L140 156",
-      ].map((d, i) => (
+      {/* Rejected candidates — considered, then dimmed */}
+      {[routes.top, routes.bottom].map((d, i) => (
         <motion.path
           key={d}
           d={d}
-          stroke={`url(#${uid}-link)`}
-          strokeWidth="1.5"
+          stroke="var(--muted-foreground)"
+          strokeWidth="1.75"
           strokeLinecap="round"
+          strokeDasharray="5 6"
+          fill="none"
           initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.08 * i, ease: [0.22, 1, 0.36, 1] }}
+          animate={
+            live
+              ? { pathLength: 1, opacity: [0, 0.55, 0.22] }
+              : { pathLength: 1, opacity: 0.3 }
+          }
+          transition={{
+            pathLength: { duration: 0.9, delay: 0.15 + i * 0.2, ease: [0.22, 1, 0.36, 1] },
+            opacity: { duration: 1.6, delay: 0.15 + i * 0.2, times: [0, 0.55, 1] },
+          }}
         />
       ))}
 
-      {/* Core brain node */}
-      <motion.circle
-        cx="140"
-        cy="100"
-        r="18"
-        fill="var(--card)"
-        stroke="var(--teal)"
-        strokeWidth="2"
-        animate={live ? { scale: [1, 1.08, 1] } : {}}
-        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformOrigin: "140px 100px" }}
-      />
-      <path
-        d="M132 100c0-6 4-10 8-10s8 4 8 10-4 10-8 10-8-4-8-10z"
-        stroke="var(--teal-ink)"
-        strokeWidth="1.75"
-        fill="none"
-      />
-      <path
-        d="M136 96h8M136 104h8"
-        stroke="var(--warm)"
-        strokeWidth="1.5"
+      {/* The chosen route — drawn last, bold, with a traveling delivery dot */}
+      <motion.path
+        d={routes.best}
+        stroke={`url(#${uid}-best)`}
+        strokeWidth="3.25"
         strokeLinecap="round"
+        fill="none"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.1, delay: 0.75, ease: [0.22, 1, 0.36, 1] }}
       />
+      {live && (
+        <motion.circle
+          r="4.5"
+          fill="var(--warm)"
+          initial={{ offsetDistance: "0%", opacity: 0 }}
+          animate={{ offsetDistance: "100%", opacity: [0, 1, 1, 0] }}
+          transition={{
+            duration: 2.4,
+            delay: 1.2,
+            repeat: Infinity,
+            repeatDelay: 0.5,
+            ease: "easeInOut",
+          }}
+          style={{
+            offsetPath: `path("${routes.best}")`,
+            offsetRotate: "0deg",
+          }}
+        />
+      )}
 
-      {/* Orbit spark */}
+      {/* Warehouse depot (start) — pitched roof, big door, stacked parcels */}
       <motion.g
-        animate={live ? { rotate: 360 } : {}}
-        transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
-        style={{ transformOrigin: "140px 100px" }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ ...spring, delay: 0.05 }}
+        style={{ transformOrigin: "52px 96px" }}
       >
-        <circle cx="140" cy="58" r="3.5" fill="var(--warm)" />
+        <path
+          d="M34 90 L52 78 L70 90 V110 H34 Z"
+          fill="var(--card)"
+          stroke="var(--warm)"
+          strokeWidth="1.75"
+          strokeLinejoin="round"
+        />
+        {/* Roll-up door with slats */}
+        <rect x="44" y="94" width="16" height="16" fill="var(--warm)" fillOpacity="0.16" stroke="var(--warm)" strokeWidth="1.25" />
+        <path d="M44 98.5h16M44 103h16" stroke="var(--warm)" strokeWidth="1" strokeOpacity="0.65" />
+        {/* Parcels waiting outside */}
+        <rect x="20" y="101" width="9" height="9" rx="1.5" fill="var(--card)" stroke="var(--warm)" strokeWidth="1.25" />
+        <path d="M24.5 101v9" stroke="var(--warm)" strokeWidth="1" strokeOpacity="0.7" />
+        <rect x="22.5" y="92" width="8" height="8" rx="1.5" fill="var(--card)" stroke="var(--warm)" strokeWidth="1.25" />
+        <path d="M26.5 92v8" stroke="var(--warm)" strokeWidth="1" strokeOpacity="0.7" />
       </motion.g>
 
-      {nodes.map((n, i) => (
+      {/* Pharmacy storefront (destination) — awning + glowing cross sign */}
+      <motion.g
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ ...spring, delay: 0.2 }}
+        style={{ transformOrigin: "226px 92px" }}
+      >
+        {live && (
+          <motion.circle
+            cx="226"
+            cy="92"
+            r="26"
+            fill={`url(#${uid}-halo)`}
+            animate={{ scale: [1, 1.25, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: "226px 92px" }}
+          />
+        )}
+        {/* Shop body */}
+        <rect x="212" y="88" width="28" height="22" rx="2" fill="var(--card)" stroke="var(--teal)" strokeWidth="1.75" />
+        {/* Scalloped awning */}
+        <path
+          d="M210 88 h32 v-4 h-32 z M210 88 a4 4 0 0 0 8 0 M218 88 a4 4 0 0 0 8 0 M226 88 a4 4 0 0 0 8 0 M234 88 a4 4 0 0 0 8 0"
+          fill="var(--teal)"
+          fillOpacity="0.3"
+          stroke="var(--teal)"
+          strokeWidth="1.25"
+        />
+        {/* Door + shop window */}
+        <rect x="217" y="96" width="7" height="14" fill="var(--teal)" fillOpacity="0.25" stroke="var(--teal)" strokeWidth="1.1" />
+        <rect x="228" y="96" width="8" height="8" fill="var(--teal)" fillOpacity="0.15" stroke="var(--teal)" strokeWidth="1.1" />
+        {/* Cross sign above the shop */}
         <motion.g
-          key={`${n.x}-${n.y}`}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 + i * 0.07, ...spring }}
-          style={{ transformOrigin: `${n.x}px ${n.y}px` }}
+          animate={live ? { opacity: [0.75, 1, 0.75] } : {}}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <rect x="217" y="66" width="18" height="18" rx="4" fill="var(--card)" stroke="var(--teal)" strokeWidth="1.75" />
+          <path d="M226 70v10M221 75h10" stroke="var(--teal-ink)" strokeWidth="2.5" strokeLinecap="round" />
+        </motion.g>
+      </motion.g>
+
+      {/* The AI robot — the decision maker, wired to the chosen route */}
+      <motion.g
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...spring, delay: 0.35 }}
+      >
+        <motion.line
+          x1="140"
+          y1="54"
+          x2="140"
+          y2="94"
+          stroke="var(--teal)"
+          strokeWidth="1.5"
+          strokeDasharray="3 4"
+          strokeOpacity="0.6"
+          animate={live ? { strokeDashoffset: [0, -14] } : {}}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        <RobotHead cx={140} cy={36} scale={0.85} active={live} />
+        <AISparkle x={176} y={14} size={5} delay={0.2} active={live} />
+      </motion.g>
+
+      {/* Neural layers — the network the robot thinks with */}
+      <motion.g
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ ...spring, delay: 0.5 }}
+      >
+        <rect
+          x="20"
+          y="12"
+          width="64"
+          height="48"
+          rx="10"
+          fill="var(--card)"
+          stroke="var(--teal)"
+          strokeWidth="1.5"
+          strokeOpacity="0.65"
+        />
+        {/* Edges between layers */}
+        {[34, 52].map((x1) =>
+          [24, 36, 48].map((y1) =>
+            [24, 36, 48].map((y2) => (
+              <line
+                key={`${x1}-${y1}-${y2}`}
+                x1={x1}
+                y1={y1}
+                x2={x1 + 18}
+                y2={y2}
+                stroke="var(--teal)"
+                strokeWidth="0.75"
+                strokeOpacity="0.3"
+              />
+            )),
+          ),
+        )}
+        {/* Nodes — signal ripples through the columns when thinking */}
+        {[34, 52, 70].map((x, col) =>
+          [24, 36, 48].map((y, row) => (
+            <motion.circle
+              key={`${x}-${y}`}
+              cx={x}
+              cy={y}
+              r="3"
+              fill={col === 2 ? "var(--warm)" : "var(--teal)"}
+              animate={live ? { opacity: [0.3, 1, 0.3], scale: [0.85, 1.25, 0.85] } : { opacity: 0.75 }}
+              transition={{
+                duration: 1.5,
+                delay: col * 0.25 + row * 0.06,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{ transformOrigin: `${x}px ${y}px` }}
+            />
+          )),
+        )}
+        {/* Wire into the robot */}
+        <motion.line
+          x1="84"
+          y1="36"
+          x2="114"
+          y2="36"
+          stroke="var(--teal)"
+          strokeWidth="1.5"
+          strokeDasharray="3 4"
+          strokeOpacity="0.6"
+          animate={live ? { strokeDashoffset: [0, -14] } : {}}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+      </motion.g>
+
+      {/* Reward loop — the star the robot learns to chase */}
+      <motion.g
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ ...spring, delay: 0.6 }}
+      >
+        <motion.line
+          x1="166"
+          y1="36"
+          x2="212"
+          y2="36"
+          stroke="var(--warm)"
+          strokeWidth="1.5"
+          strokeDasharray="3 4"
+          strokeOpacity="0.55"
+          animate={live ? { strokeDashoffset: [0, 14] } : {}}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        {/* Circulating feedback ring */}
+        <motion.g
+          animate={live ? { rotate: 360 } : {}}
+          transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
+          style={{ transformOrigin: "230px 36px" }}
         >
           <circle
-            cx={n.x}
-            cy={n.y}
-            r="9"
-            fill="var(--card)"
-            stroke="var(--brand)"
+            cx="230"
+            cy="36"
+            r="15"
+            fill="none"
+            stroke="var(--warm)"
             strokeWidth="1.5"
+            strokeDasharray="6 5"
+            strokeOpacity="0.7"
           />
-          <motion.circle
-            cx={n.x}
-            cy={n.y}
-            r="3"
-            fill={i % 2 === 0 ? "var(--teal)" : "var(--warm)"}
-            animate={live ? { opacity: [0.5, 1, 0.5] } : {}}
+          <path d="M226 17.5 L234 21 L226.5 25.5 Z" fill="var(--warm)" fillOpacity="0.9" />
+        </motion.g>
+        {/* Reward star — plain <g> holds the translate; Motion's scale transform
+            would otherwise wipe the SVG transform attribute and dump it at 0,0 */}
+        <g transform="translate(230 36)">
+          <motion.path
+            d="M0,-7 L1.65,-2.27 L6.66,-2.16 L2.66,0.87 L4.11,5.66 L0,2.8 L-4.11,5.66 L-2.66,0.87 L-6.66,-2.16 L-1.65,-2.27 Z"
+            fill="var(--warm)"
+            animate={live ? { scale: [1, 1.3, 1], opacity: [0.75, 1, 0.75] } : {}}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: "0px 0px" }}
+          />
+        </g>
+      </motion.g>
+
+      {live && (
+        <>
+          {/* "+1" reward pops when the delivery lands… */}
+          <motion.text
+            x="248"
+            y="76"
+            fill="var(--warm)"
+            fontSize="12"
+            fontWeight="700"
+            fontFamily="ui-monospace, monospace"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0], y: [0, -14] }}
             transition={{
-              duration: 1.5,
-              delay: i * 0.15,
+              duration: 1.2,
+              delay: 3.5,
               repeat: Infinity,
+              repeatDelay: 1.7,
+              ease: "easeOut",
+            }}
+          >
+            +1
+          </motion.text>
+          {/* …and travels back to the robot: the learning loop closes */}
+          <motion.path
+            d="M0,-4.5 L1.06,-1.46 L4.28,-1.39 L1.71,0.56 L2.64,3.64 L0,1.8 L-2.64,3.64 L-1.71,0.56 L-4.28,-1.39 L-1.06,-1.46 Z"
+            fill="var(--warm)"
+            initial={{ offsetDistance: "0%", opacity: 0 }}
+            animate={{ offsetDistance: "100%", opacity: [0, 1, 1, 0] }}
+            transition={{
+              duration: 1.1,
+              delay: 3.7,
+              repeat: Infinity,
+              repeatDelay: 1.8,
               ease: "easeInOut",
             }}
+            style={{
+              offsetPath: 'path("M226 74 C 232 44, 196 18, 164 28")',
+              offsetRotate: "0deg",
+            }}
           />
-        </motion.g>
-      ))}
+        </>
+      )}
+
+      {/* Checkmark seal on the chosen route */}
+      <motion.g
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ ...spring, delay: 1.5 }}
+        style={{ transformOrigin: "140px 99px" }}
+      >
+        <circle cx="140" cy="99" r="10" fill="var(--teal)" />
+        <path
+          d="M135.5 99l3 3 6-6"
+          stroke="var(--primary-foreground)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </motion.g>
     </svg>
   );
 }

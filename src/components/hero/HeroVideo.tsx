@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { fadeUp, staggerContainer } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 /** Same breakpoint the responsive assets swap at. */
 function useMediaQuery(query: string): boolean {
@@ -146,6 +148,36 @@ export function HeroVideo({ inviteeName }: { inviteeName?: string }) {
           {t("hero.subtitle")}
         </motion.p>
       </motion.div>
+
+      {/* Scroll cue — invites guests down into the story */}
+      <motion.button
+        type="button"
+        onClick={() =>
+          document
+            .getElementById("about")
+            ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" })
+        }
+        initial={reduce ? undefined : { opacity: 0, y: 8 }}
+        animate={reduce ? undefined : { opacity: 1, y: 0 }}
+        transition={{ delay: 1.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className={cn(
+          "absolute bottom-5 left-1/2 z-30 -translate-x-1/2 cursor-pointer",
+          "flex flex-col items-center gap-1 text-white/70 outline-none",
+          "transition-colors hover:text-white focus-visible:text-white",
+          "focus-visible:rounded-lg focus-visible:ring-2 focus-visible:ring-white/60",
+        )}
+      >
+        <span className="text-[11px] font-medium uppercase tracking-[0.22em]">
+          {t("hero.scroll")}
+        </span>
+        <motion.span
+          aria-hidden="true"
+          animate={reduce ? undefined : { y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ChevronDown className="size-5" strokeWidth={2} />
+        </motion.span>
+      </motion.button>
     </section>
   );
 }
